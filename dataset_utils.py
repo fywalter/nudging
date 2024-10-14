@@ -231,23 +231,6 @@ def get_dataset_arc_challenge(split='validation',
         outputs.append(f"{answer}. {choices_text[choices_label.index(answer)]}")
     return inputs, outputs, 'question', 'answer'
 
-def get_dataset_alpacaeval(split='eval',
-                            num_sample=None,
-                            input_key='instruction',
-                            output_key='output',
-                            **kwargs):
-    alpacaeval = load_dataset("tatsu-lab/alpaca_eval", "alpaca_eval")
-    dataset = alpacaeval["eval"]    # only use the eval set for alpaca eval
-    # fix random seed for reproducibility
-    np.random.seed(RANDOM_SEED)
-    if num_sample is not None and num_sample < len(dataset):
-        random_indexes = np.random.choice(len(dataset), num_sample, replace=False)
-        dataset = dataset.select(random_indexes)
-        # dataset = dataset.select(range(num_sample))
-    inputs = [{"context": "", "input": example[input_key].strip()} for example in dataset]
-    outputs = [example[output_key] for example in dataset]
-    return inputs, outputs, input_key, output_key
-
 def get_dataset_mmlu(split='validation',
                     num_sample=None,
                     input_key='question',
