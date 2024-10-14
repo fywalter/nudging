@@ -53,23 +53,51 @@ Please refer to the [vllm documentation](https://docs.vllm.ai/en/v0.2.7/getting_
 ## Running the code
 To run the experiment for a dataset, say GSM8K, run the following command:
 
-For base model only:
+For base model only with base model `base_model_path` hosted at `base_model_host_url`:
 ```bash
-python run_api.py --dataset_name gsm8k --num_sample 100 --exp base_only --base_model base_model_path --base_host base_model_host_url --rerun --num_threads 20
+python run_api.py --dataset_name gsm8k \
+    --num_sample 100 \
+    --exp base_only \
+    --base_model base_model_path \
+    --base_host base_model_host_url \
+    --rerun --num_threads 20
 ```
 
-For nudging model only
+For nudging model only with nudging model `nudging_model_path` hosted at `nudging_model_host_url`:
 ```bash
-python run_api.py --dataset_name gsm8k --num_sample 100 --exp nudging_only --nudging_model nudging_model_path --nudging_host nudging_model_host_url --rerun --num_threads 20
+python run_api.py --dataset_name gsm8k \
+    --num_sample 100 \
+    --exp nudging_only \
+    --nudging_model nudging_model_path \
+    --nudging_host nudging_model_host_url \
+    --rerun --num_threads 20
 ```
-For Nudging
+For nudging with top prob threshold $\gamma=0.4$ with base model `base_model_path` hosted at `base_model_host_url` and nudging model `nudging_model_path` hosted at `nudging_model_host_url`:
 ```bash
-python run_api.py --dataset_name gsm8k --num_sample 100 --exp nudging --base_model base_model_path --base_host base_model_host_url  --nudging_model nudging_model_path --nudging_host nudging_model_host_url --rerun --num_threads 20 --top_prob_thres 0.4
+python run_api.py --dataset_name gsm8k \
+    --num_sample 100 \
+    --exp nudging \
+    --base_model base_model_path \
+    --base_host base_model_host_url \
+    --nudging_model nudging_model_path \
+    --nudging_host nudging_model_host_url \
+    --rerun --num_threads 20 \
+    --top_prob_thres 0.4
 ```
 
-For Baselines (proxy_tuning)
+For baselines (proxy_tuning) with base model `base_model_path` hosted at `base_model_host_url`, proxy chat model `proxy_chat_path`, proxy base model `proxy_base_path` hosted at `proxy_base_host_url`:
 ```bash
-python run_api.py --dataset_name gsm8k --num_sample 100 --exp baseline --baseline_method proxy_tuning --base_model base_model_path --base_host base_model_host_url --proxy_chat_model proxy_chat_path --proxy_base_model proxy_base_path --proxy_base_host proxy_base_host_url --proxy_nudging_host proxy_nudging_host_url --rerun --num_threads 20 --top_prob_thres 0.4 
+python run_api.py --dataset_name gsm8k \
+    --num_sample 100 \
+    --exp baseline \
+    --baseline_method proxy_tuning \
+    --base_model base_model_path \
+    --base_host base_model_host_url \
+    --proxy_chat_model proxy_chat_path \
+    --proxy_base_model proxy_base_path \
+    --proxy_base_host proxy_base_host_url \
+    --proxy_nudging_host proxy_nudging_host_url \
+    --rerun --num_threads 20
 ```
 
 We use concurrent.futures to parallelize the inference process. The `num_threads` argument specifies the number of threads to use for parallelization.
