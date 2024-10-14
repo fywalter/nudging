@@ -53,17 +53,22 @@ Please refer to the [vllm documentation](https://docs.vllm.ai/en/v0.2.7/getting_
 ## Running the code
 To run the experiment for a dataset, say GSM8K, run the following command:
 
+For base model only:
 ```bash
-# For base model only
 python run_api.py --dataset_name gsm8k --num_sample 100 --exp base_only --base_model base_model_path --base_host base_model_host_url --rerun --num_threads 20
+```
 
-# For nudging model only
+For nudging model only
+```bash
 python run_api.py --dataset_name gsm8k --num_sample 100 --exp nudging_only --nudging_model nudging_model_path --nudging_host nudging_model_host_url --rerun --num_threads 20
-
-# Nudging
+```
+For Nudging
+```bash
 python run_api.py --dataset_name gsm8k --num_sample 100 --exp nudging --base_model base_model_path --base_host base_model_host_url  --nudging_model nudging_model_path --nudging_host nudging_model_host_url --rerun --num_threads 20 --top_prob_thres 0.4
+```
 
-# Baseline (proxy_tuning)
+For Baselines (proxy_tuning)
+```bash
 python run_api.py --dataset_name gsm8k --num_sample 100 --exp baseline --baseline_method proxy_tuning --base_model base_model_path --base_host base_model_host_url --proxy_chat_model proxy_chat_path --proxy_base_model proxy_base_path --proxy_base_host proxy_base_host_url --proxy_nudging_host proxy_nudging_host_url --rerun --num_threads 20 --top_prob_thres 0.4 
 ```
 
