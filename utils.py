@@ -592,7 +592,6 @@ def completion_with_baseline(client_base,
                             context="",
                             question="",
                             completion_token_num=16,
-                            debug=False,
                             ):
     all_info = {}
     full_prefix_base = apply_instruct_template(base_model, instruction_prompt, context + q_prefix + question, answer_start_prompt)
@@ -610,7 +609,6 @@ def completion_with_baseline(client_base,
             full_prefix_proxy_chat=full_prefix_proxy_chat,
             temperature=temperature,
             completion_token_num=completion_token_num,
-            debug=debug,
         )
     elif baseline_method == 'proxy_tuning':
         ans_model = completion_baseline_proxy_tuning(
@@ -626,7 +624,6 @@ def completion_with_baseline(client_base,
             full_prefix_proxy_base=full_prefix_proxy_base,
             temperature=temperature,
             completion_token_num=completion_token_num,
-            debug=debug,
         )
     else:
         raise ValueError(f"Unknown baseline method {baseline_method}")

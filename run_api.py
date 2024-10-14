@@ -455,7 +455,7 @@ def main(
     base_model: str,
     nudging_model: str,
     proxy_base_model: str,      # for the baseline methods (proxy tuning)
-    proxy_nudging_model: str,   # for the baseline methods (proxy tuning)
+    proxy_chat_model: str,   # for the baseline methods (proxy tuning)
     max_token_total: int,
     base_temperature: float,
     nudging_temperature: float,
@@ -473,7 +473,7 @@ def main(
     base_host: str = None,
     nudging_host: str = None,
     proxy_base_host: str = None,
-    proxy_nudging_host: str = None,
+    proxy_chat_host: str = None,
     use_local_host: bool = True,
 ):
     exp_prefix = f"split_{split}_" + exp_prefix
@@ -551,9 +551,9 @@ def main(
                 api_key=openai_api_key,
                 base_url=proxy_base_host,
             )
-            client_proxy_nudging = OpenAI(
+            client_proxy_chat = OpenAI(
                 api_key=openai_api_key,
-                base_url=proxy_nudging_host,
+                base_url=proxy_chat_host,
             )
         ############################
         # Change here for deploying the model using API providers like Together AI or Fireworks AI
@@ -623,13 +623,13 @@ def main(
     elif exp == 'baseline':
         exp_baseline(
             client_base=client_base,
-            client_proxy_chat=client_proxy_nudging,
+            client_proxy_chat=client_proxy_chat,
             client_proxy_base=client_proxy_base,
             dataset_name=dataset_name,
             num_samples=num_samples,
             base_model=base_model,
             proxy_base_model=proxy_base_model,
-            proxy_chat_model=proxy_nudging_model,
+            proxy_chat_model=proxy_chat_model,
             max_token_total=max_token_total,
             baseline_method=baseline_method,
             temperature=base_temperature,
@@ -649,8 +649,8 @@ if __name__ == "__main__":
     parser.add_argument("--num_threads", type=int, default=20, help="The number of threads")
     parser.add_argument("--base_model", type=str, default=None, help="The base model to use")
     parser.add_argument("--nudging_model", type=str, default=None, help="The nudging model to use")
-    parser.add_argument("--proxy_base_model", type=str, default=None, help="The base model to use")
-    parser.add_argument("--proxy_nudging_model", type=str, default=None, help="The nudging model to use")
+    parser.add_argument("--proxy_base_model", type=str, default=None, help="The proxy base model to use")
+    parser.add_argument("--proxy_chat_model", type=str, default=None, help="The proxy chat model to use")
     parser.add_argument("--completion_token_num", type=int, default=16, help="The number of token to complete in each nudging round using the base model")
     parser.add_argument("--completion_token_num_nudging", type=int, default=16, help="The number of token to complete in each nudging round using the nudging model")
     parser.add_argument("--max_token_total", type=int, default=512, help="The maximum number of tokens")
@@ -666,7 +666,7 @@ if __name__ == "__main__":
     parser.add_argument("--base_host", type=str, default=None, help="The base host for local models")
     parser.add_argument("--nudging_host", type=str, default=None, help="The nudging host for local models")
     parser.add_argument("--proxy_base_host", type=str, default=None, help="The proxy base host for local models")
-    parser.add_argument("--proxy_nudging_host", type=str, default=None, help="The proxy nudging host for local models")
+    parser.add_argument("--proxy_chat_host", type=str, default=None, help="The proxy chat host for local models")
     parser.add_argument("--rerun", action='store_true', help="Whether to rerun the experiment")
     parser.add_argument("--print_intermediate_output", action='store_true', help="Whether to print intermediate output")
     args = parser.parse_args()
