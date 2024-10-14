@@ -49,9 +49,36 @@ print("Completion result:", completion)
 ```
 
 Please refer to the [vllm documentation](https://docs.vllm.ai/en/v0.2.7/getting_started/quickstart.html) for more details including setting host and port numbers.
+## Datasets
+We use the following 13 datasets for our experiments: 
+[gsm8k](https://huggingface.co/datasets/gsm8k), 
+[svamp](https://huggingface.co/datasets/gsm8k), 
+[multiarith](https://huggingface.co/datasets/ChilleD/MultiArith), 
+[mmlu](https://huggingface.co/datasets/cais/mmlu), 
+[arc_challenge](https://huggingface.co/datasets/allenai/ai2_arc), 
+[strategyqa](https://huggingface.co/datasets/ChilleD/StrategyQA), 
+[csqa](https://huggingface.co/datasets/tau/commonsense_qa), 
+[sports](https://huggingface.co/datasets/hails/bigbench/viewer/sports_understanding_zero_shot), 
+[date](https://huggingface.co/datasets/hails/bigbench/viewer/date_understanding_zero_shot), 
+[coin_flip](https://huggingface.co/datasets/skrishna/coin_flip), 
+[last_letter_concat](https://huggingface.co/datasets/ChilleD/LastLetterConcat), 
+[justeval](https://huggingface.co/datasets/re-align/just-eval-instruct), 
+[justeval_safe](https://huggingface.co/datasets/re-align/just-eval-instruct/viewer/judgements_safety).
+
+
+The download of datasets is handle automatically by the code from the [Huggingface datasets](https://huggingface.co/docs/datasets/) library.
+
+## Models
+Our experiments are based on three model families: 
+[Llama-2](https://huggingface.co/meta-llama/Llama-2-7b),
+[Gemma-2](https://huggingface.co/google/gemma-2-2b),
+[OLMo](https://huggingface.co/allenai/OLMo-1B-0724-hf). One can use any instruct model from all three families to nudge any base model from any of the three families. For example, using Llama-2-7b-chat to nudge Gemma-2-27b.
+
+To run nudging on your own model family, one need to add the instruct template to the `apply_instruct_template()` function in the `utils.py` file. One can check the code for the three model families to see how to add a new model family.
+
 
 ## Running the code
-To run the experiment for a dataset, say GSM8K, run the following command:
+To run the experiment for a dataset, say GSM8K, run the following commands. We use concurrent.futures to parallelize the inference process. The `num_threads` argument specifies the number of threads to use for parallelization. The `dataset_name` should be one of: `gsm8k`, `svamp`, `multiarith`, `mmlu`, `arc_challenge`, `strategyqa`, `csqa`, `sports`, `date`, `coin_flip`, `last_letter_concat`, `justeval`, `justeval_safe`.
 
 For base model only with base model `base_model_path` hosted at `base_model_host_url`:
 ```bash
@@ -99,8 +126,6 @@ python run_api.py --dataset_name gsm8k \
     --proxy_nudging_host proxy_nudging_host_url \
     --rerun --num_threads 20
 ```
-
-We use concurrent.futures to parallelize the inference process. The `num_threads` argument specifies the number of threads to use for parallelization.
 
 ## Citing
 If you find our work useful, please consider citing:
