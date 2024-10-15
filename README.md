@@ -2,7 +2,7 @@
 
 This is the code for Nudging: Inference-time Alignment via Model Collaboration.
  * [Project Page](https://fywalter.github.io/nudging/)  (coming soon)
- * [Paper](https://fywalter.github.io/nudging/) (coming soon)
+ * [Paper](https://arxiv.org/abs/2410.09300)
 
 Currently we provide an API-based implementation of nudging that uses [vllm](https://github.com/vllm-project/vllm) to host the models and provide API access.
 With slight modifications the code could also work with any API service providers that provide openai-compatible interfaces like [Together AI](https://www.together.ai/) and [Fireworks AI](https://fireworks.ai/).
@@ -130,16 +130,13 @@ python run_api.py --dataset_name gsm8k \
 ## Citing
 If you find our work useful, please consider citing:
 ```BibTeX
-@article{park2021nerfies
-  author    = {Park, Keunhong 
-               and Sinha, Utkarsh 
-               and Barron, Jonathan T. 
-               and Bouaziz, Sofien 
-               and Goldman, Dan B 
-               and Seitz, Steven M. 
-               and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
+@misc{fei2024nudginginferencetimealignmentmodel,
+      title={Nudging: Inference-time Alignment via Model Collaboration}, 
+      author={Yu Fei and Yasaman Razeghi and Sameer Singh},
+      year={2024},
+      eprint={2410.09300},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2410.09300}, 
 }
 ```
