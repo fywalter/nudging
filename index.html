@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Inference-time Alignment via Model Collaboration">
+  <meta name="keywords" content="Nudging">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Nudging: Inference-time Alignment via Model Collaboration</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
+  <!-- <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+/Users/panlu/Library/Mobile Documents/com~apple~CloudDocs/ImageMath/visual-mathqa-server/data_final/images
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <!-- <link rel="icon" href="static/images/icon.png"> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="./static/css/leaderboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bulma.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script> -->
+  <script type="text/javascript" src="static/js/sort-table.js" defer></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/explorer-index.js"></script>
+  <script src="./static/js/question_card.js"></script>
+
+  <script src="./static/js/leaderboard_testmini.js"></script>
+  <script src="./data/results/output_folders.js" defer></script>
+  <script src="./data/results/model_scores.js" defer></script>
+
+  <script src="./visualizer/data/data_public.js" defer></script>
+  <style>
+    pre {
+        max-height: 400px; 
+        overflow-x: auto; 
+        overflow-y: auto;
+        background-color: #f0f0f0; 
+        padding: 10px;
+        border: 1px solid #ccc; 
+        text-align: left;
+    }
+</style>
+<!-- <script>
+  function loadJSON(file, elementId) {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+              document.getElementById(elementId).textContent = xhr.responseText;
+              hljs.highlightElement(document.getElementById(elementId));
+          }
+      };
+      xhr.open('GET', file, true);
+      xhr.send();
+  }
+
+  loadJSON('./static/example/plan_1.json', 'json1');
+  loadJSON('./static/example/plan_6.json', 'json2');
+  loadJSON('./static/example/plan_11.json', 'json3');
+  loadJSON('./static/example/plan_16.json', 'json4');
+  loadJSON('./static/example/plan_21.json', 'json5');
+  loadJSON('./static/example/plan_26.json', 'json6');
+  loadJSON('./static/example/plan_31.json', 'json7');
+  loadJSON('./static/example/plan_36.json', 'json8');
+  loadJSON('./static/example/plan_41.json', 'json9');
+</script> -->
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title is-bold">
+              <!-- <img src="static/images/icon.png" style="width:2em;vertical-align: middle" alt="Logo" /> -->
+              <span class="mathvista" style="vertical-align: middle">Nudging</span>
+            </h1>
+            <h2 class="subtitle is-3 publication-subtitle">
+              Inference-time Alignment via Model Collaboration
+            </h2>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://fywalter.github.io/">Yu Fei</a>,
+                </span>
+              <span class="author-block">
+                <a href="https://yasamanrazeghi.com/">Yasaman Razeghi</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://sameersingh.org/">Sameer Singh</a>
+              </span>
+            </div>
+
+            <br />
+
+            <div class="is-size-6 publication-authors">
+              <span class="author-block"></sup>Department of Computer Science, University of California Irvine</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2410.09300" class="external-link button is-normal is-rounded is-dark">
+                    <!-- <a href="https://lupantech.github.io/papers/arxiv23_mathvista.pdf"
+                   class="external-link button is-normal is-rounded is-dark"> -->
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Video Link. -->
+                <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Demo Link. -->
+              <span class="link-block">
+                <a href="https://fywalter.github.io/nudging/"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-cube"></i>
+                  </span>
+                  <span>Demo (coming soon)</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/fywalter/nudging"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+                <!-- Dataset Link. -->
+              
+                <!-- Leaderboard Link. -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!--
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="content has-text-justified">
+        <strong>
+          The advancements of language language models (LLMs) have piqued growing interest in developing LLM-based language agents to automate scientific discovery end-to-end, which has sparked both excitement and skepticism about the true capabilities of such agents. In this work, we argue that for an agent to fully automate scientific discovery, it must be able to complete all essential tasks in the workflow. Thus, we call for rigorous assessment of agents on individual tasks in a scientific workflow before making bold claims on end-to-end automation. To this end, we present ScienceAgentBench, a new benchmark for evaluating language agents for data-driven scientific discovery: 
+          <ul>
+            <li>
+              To ensure the scientific authenticity and real-world relevance of our benchmark, we extract 102 tasks from 44 peer-reviewed publications in four disciplines and engage nine subject matter experts to validate them. 
+            </li>
+            <li>
+              We unify the target output for every task to a self-contained Python program file and employ an array of evaluation metrics to examine the generated programs, execution results, and costs. 
+            </li>
+            <li>
+              Each task goes through multiple rounds of manual validation by annotators and subject matter experts to ensure its annotation quality and scientific plausibility.
+            </li>
+          </ul>
+        </strong>
+      </div> 
+      <div class="content has-text-centered">
+        <img src="static/images/main.png" alt="geometric reasoning" width="100%" />
+        <p> Overview of ScienceAgentBench.
+          Top: Distribution of sub-tasks in ScienceAgentBench. Each task in our benchmark consists of one or more of these sub-tasks and requires successful completion of all sub-tasks to achieve the task goal. Bottom: Heterogeneous datasets involved: (a) a cell image in Bioinformatics, (b) a molecular activity visualization in Computational Chemistry, (c) a flooding risk map in Geographical Information Science, and (d) an EEG time series in Psychology and Cognitive Neuroscience.
+        </p>
+      </div>
+    </div>
+  </section>
+  -->
+
+
+  <!-- <section class="section">
+  <div class="container" style="margin-top: -150px; margin-bottom: -100px;">
+    <div class="columns is-centered m-6">
+      <div class="column is-full has-text-centered content">
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="static/images/main.png" alt="geometric reasoning" width="100%"/>
+              <p>  Given a query, language agents are tasked with employing various search tools to gather information.<br> Based on the collected information, language agents are expected to deliver a plan that not only meet <br> the  user's needs specified in the query but also adheres to commonsense constraints. 
+            </div>
+          </div>
+          <div class="box m-5">
+            <div class="content has-text-centered">
+              <img src="static/images/tease_scores_gpt4v.png" alt="geometric reasoning" width="84%"/>
+              <p> Accuracy scores of one leading LLM (i.e., PoT GPT-4), four primary LMMs, random chance, and human performance our proposed 
+              <img src="static/images/mathvista.png" style="width:1.0em;vertical-align: middle" alt="Logo"/>
+              <span class="mathvista">MathVista</span>
+              across mathematical reasoning and visual context types. PoT refers to program-of-thought prompting, and PoT GPT-4 is a textual LLM augmented with the caption and OCR text. GPT-4V is manually evaluated via the playground chatbot.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section> -->
+
+
+  <!-- DATASET SECTION -->
+  <!-- <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-1 mathvista">
+        <img src="static/images/icon.png" style="width:1em;vertical-align: middle" alt="Logo" />
+        <span class="mathvista" style="vertical-align: middle">ScienceAgentBench</span>
+      </h1>
+    </div>
+  </section> 
+  -->
+
+  <!-- <section class="section">
+  <div class="container" style="margin-bottom: 2vh;">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introduction</h2>
+        <div class="content has-text-justified">
+          <p> -->
+
+  <section class="section">
+    <div class="container">
+      <div class="columns is-centered has-text-centered">
+        <!-- <div class="column is-full-width has-text-centered"> -->
+        <div class="column is-four-fifths">
+          <div class="content has-text-centered">
+            <img src="static/images/nudging_gif.gif" alt="data-overview" style="max-width: 100%;" />
+            <p >Nudging employs a small aligned model to generate nudging tokens to steer the large base model's output toward desired directions when the base model's uncertainty is high.</p>
+          </div>
+          <br />
+          <h2 class="title is-3">Overview</h2>
+          <div class="content has-text-justified">
+            <p>
+              <strong>Large language models (LLMs)</strong> require <strong>alignment</strong>—such as instruction-tuning or reinforcement learning from human feedback—to effectively and safely follow user instructions.
+              The conventional training pipelines require <strong>separate alignment tuning for every model size within each model family</strong>. This practice leads to substantial computational overhead, hindering the rapid iteration and development of new model families.
+            </p>
+            <p>
+              In this work, we propose <strong>nudging</strong>, a simple, plug-and-play, and <strong>training-free</strong> algorithm that <strong>aligns any base model at inference time using a small aligned model</strong>.
+              Nudging is motivated by recent findings that alignment primarily alters the model's behavior on a small subset of stylistic tokens, such as ``Sure'' or ``Thank''. 
+              We find that <strong>base models are significantly more uncertain when generating these alignment-related tokens</strong>. Leveraging this observation, nudging employs a small aligned model to generate nudging tokens to steer the large base model's output toward desired directions when the base model's uncertainty is high. 
+            </p>
+            <p>
+              We evaluate the effectiveness of nudging across <strong>3 model families</strong> and <strong>13 tasks</strong>, covering reasoning, general knowledge, instruction following, and safety benchmarks. Without any additional training, nudging a large base model with a <strong>7x-14x smaller</strong> aligned model achieves zero-shot performance comparable to, and sometimes surpassing, that of large aligned models. 
+              For example, nudging <strong>OLMo-7b</strong> with <strong>OLMo-1b-instruct</strong>—affecting less than <strong>9%</strong> of tokens—achieves a <strong>10%</strong> absolute improvement on <strong>GSM8K</strong> over <strong>OLMo-7b-instruct</strong>. 
+              Unlike prior inference-time tuning methods, nudging enables <strong>off-the-shelf collaboration between model families</strong>. 
+              For instance, nudging <strong>Gemma-2-27b</strong> with <strong>Llama-2-7b-chat</strong> outperforms <strong>Llama-2-70b-chat</strong> on various tasks. 
+              Overall, this work introduces a simple yet powerful approach to token-level model collaboration, offering a modular solution to LLM alignment.
+            </p>
+
+      <br />
+
+      <h2 class="title is-3 has-text-centered">Two Key Insights</h2>
+      <p>
+        Previous work finds that the token distributions of base models shift significantly after alignment only on a small set of output positions. 
+        By identifying (1) <strong>where the base and aligned model would disagree</strong> and (2) <strong>what the aligned model would generate for these positions</strong>, we can insert these tokens during decoding to nudge a base model to behave like an aligned model. 
+        We study these two questions: <strong>where to nudge </strong>and <strong>what to nudge</strong>. Specifically, we find:
+        <ol>
+          <li><strong>Base models are significantly more uncertain at alignment-related positions.</strong></li>
+          <li><strong>Aligned models of different sizes within the same family tend to agree on alignment-related positions.</strong></li>
+        </ol>
+      </p>
+      <br />
+      <h3 class="title is-4 has-text-centered">Experimental Setup</h3>
+      
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="box m-5">
+          <div class="content has-text-centered">
+            <div class="content has-text-centered">
+              <img src="static/images/where_to_nudge.jpg" alt="data-overview" style="max-width: 100%;" />
+              <p >To answer <strong>where to nudge</strong>, we compare the token distribution of the base model and the aligned model. We aim to show that the base model uncertainty can help identify positions where the token distribution of the base model significantly differs from the aligned model.</p>
+          </div>
+          </div>
+        </div>
+        <div class="box m-5">
+          <div class="content has-text-centered">
+            <div class="content has-text-centered">
+              <img src="static/images/what_to_nudge.jpg" alt="data-overview" style="max-width: 100%;" />
+              <p >To answer <strong>what to nudge</strong>, we analyze how aligned models of different sizes within the same family behave at alignment-related positions. We find that the small and large aligned models usually have similar token distribution at these positions.</p>
+          </div>
+          </div>
+        </div>
+      </div>
+      <h3 class="title is-4 has-text-centered">Findings</h3>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="box m-5">
+          <div class="content has-text-centered">
+            <div class="content has-text-centered">
+              <img src="static/images/agreement.png" alt="data-overview" style="max-width: 100%;" />
+              <p ><strong>Base models are mostly certain and agree with their aligned counterparts at the token level. When the base models get more uncertain, they are more likely to disagree with the aligned models.</strong></p>
+          </div>
+          </div>
+        </div>
+        <div class="box m-5">
+          <div class="content has-text-centered">
+            <br /><br /><br /><br /><br />
+            <table>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>GSM8K</th>
+                  <th>MMLU</th>
+                  <th>Just-eval</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Llama-2</td>
+                  <td>82.6</td>
+                  <td>65.4</td>
+                  <td>69.7</td>
+                </tr>
+                <tr>
+                  <td>Gemma-2</td>
+                  <td>87.6</td>
+                  <td>58.2</td>
+                  <td>59.6</td>
+                </tr>
+                <tr>
+                  <td>OLMo</td>
+                  <td>38.0</td>
+                  <td>42.7</td>
+                  <td>46.9</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>The ratio of token positions where the top-1 token from the large aligned model is among the top-3 of the small aligned model when the large base and aligned models disagree. 
+              <strong>At alignment-related positions, the small and large aligned model usually have similar token distribution.</strong></p>
+              <br /><br /><br /><br /><br />
+          </div>
+        </div>
+      </div>
+      <br />
+
+      <h2 class="title is-3 has-text-centered">Experiments</h2>
+      <div class="container">
+        <p>
+          To demonstrate the effectiveness of <strong>nudging</strong>, we evaluate it across three different model families: <strong>Llama-2, Gemma-2, and OLMo</strong>. We consider <strong>13 tasks, covering reasoning, general knowledge, instruction following, and safety benchmarks</strong>. We find that
+          <ul>
+            <li>
+              Nudging a large base model with a <strong>7x-14x smaller</strong> aligned model achieves zero-shot performance comparable to, and sometimes surpassing, that of large aligned models.
+            </li>
+            <li>
+              Nudging is particularly effective on <strong>math and symbolic reasoning tasks</strong>.
+            </li>
+            <li>
+              Nudging works effectively for <strong>models from different families</strong>.
+            </li>
+          </ul>
+        </p>
+        <div class="content has-text-centered">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>GSM</th>
+                <th>SVP</th>
+                <th>MA</th>
+                <th>MM</th>
+                <th>Arc</th>
+                <th>CS</th>
+                <th>ST</th>
+                <th>date</th>
+                <th>SP</th>
+                <th>CF</th>
+                <th>LLC</th>
+                <th>Avg.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Llama 2 Section -->
+              <tr>
+                <td colspan="13"><strong>Llama 2</strong></td>
+              </tr>
+              <tr>
+                <td>70b</td>
+                <td>10.0</td>
+                <td>11.7</td>
+                <td>4.4</td>
+                <td>26.6</td>
+                <td><strong>78.3</strong></td>
+                <td>42.2</td>
+                <td><strong>62.7</strong></td>
+                <td>44.7</td>
+                <td>42.1</td>
+                <td><u>47.7</u></td>
+                <td>1.3</td>
+                <td>33.8</td>
+              </tr>
+              <tr>
+                <td>7b-chat</td>
+                <td>25.5</td>
+                <td>43.3</td>
+                <td>62.8</td>
+                <td>40.9</td>
+                <td>54.1</td>
+                <td>52.2</td>
+                <td>50.4</td>
+                <td>33.9</td>
+                <td>51.7</td>
+                <td>45.0</td>
+                <td>7.3</td>
+                <td>42.5</td>
+              </tr>
+              <tr>
+                <td>70b-chat</td>
+                <td><strong>48.5</strong></td>
+                <td><strong>64.0</strong></td>
+                <td><u>63.9</u></td>
+                <td><strong>57.4</strong></td>
+                <td><u>77.6</u></td>
+                <td><strong>70.3</strong></td>
+                <td>58.9</td>
+                <td><strong>48.8</strong></td>
+                <td><strong>64.9</strong></td>
+                <td>38.3</td>
+                <td><u>31.3</u></td>
+                <td><u>56.7</u></td>
+              </tr>
+              <tr>
+                <td><em>Nudging</em></td>
+                <td><u>46.2</u></td>
+                <td><u>63.3</u></td>
+                <td><strong>71.1</strong></td>
+                <td><strong>57.4</strong></td>
+                <td>75.9</td>
+                <td><u>59.2</u></td>
+                <td><u>60.0</u></td>
+                <td><u>47.7</u></td>
+                <td><u>59.5</u></td>
+                <td><strong>57.4</strong></td>
+                <td><strong>38.7</strong></td>
+                <td><strong>57.9</strong></td>
+              </tr>
+              <!-- Gemma 2 Section -->
+              <tr>
+                <td colspan="13"><strong>Gemma 2</strong></td>
+              </tr>
+              <tr>
+                <td>27b</td>
+                <td>6.7</td>
+                <td>8.3</td>
+                <td>7.0</td>
+                <td>17.7</td>
+                <td>24.2</td>
+                <td>16.0</td>
+                <td>21.3</td>
+                <td>12.5</td>
+                <td>7.9</td>
+                <td>7.6</td>
+                <td>6.7</td>
+                <td>12.4</td>
+              </tr>
+              <tr>
+                <td>2b-it</td>
+                <td>63.8</td>
+                <td>72.3</td>
+                <td><u>92.2</u></td>
+                <td>57.5</td>
+                <td>78.6</td>
+                <td><u>70.0</u></td>
+                <td>53.4</td>
+                <td>30.4</td>
+                <td>56.2</td>
+                <td><u>33.9</u></td>
+                <td>4.7</td>
+                <td>55.7</td>
+              </tr>
+              <tr>
+                <td>27b-it</td>
+                <td><strong>85.4</strong></td>
+                <td><strong>86.7</strong></td>
+                <td><strong>99.4</strong></td>
+                <td><strong>75.1</strong></td>
+                <td><strong>92.7</strong></td>
+                <td><strong>71.7</strong></td>
+                <td><strong>70.6</strong></td>
+                <td><strong>69.6</strong></td>
+                <td><strong>74.3</strong></td>
+                <td>11.3</td>
+                <td><u>82.0</u></td>
+                <td><strong>74.4</strong></td>
+              </tr>
+              <tr>
+                <td><em>Nudging</em></td>
+                <td><u>74.6</u></td>
+                <td><u>77.0</u></td>
+                <td><u>92.2</u></td>
+                <td><u>66.8</u></td>
+                <td><u>88.9</u></td>
+                <td>69.8</td>
+                <td><u>62.3</u></td>
+                <td><u>49.9</u></td>
+                <td><u>63.0</u></td>
+                <td><strong>42.7</strong></td>
+                <td><strong>86.0</strong></td>
+                <td><u>70.3</u></td>
+              </tr>
+              <!-- OLMo Section -->
+              <tr>
+                <td colspan="13"><strong>OLMo</strong></td>
+              </tr>
+              <tr>
+                <td>7b</td>
+                <td><u>18.8</u></td>
+                <td>16.7</td>
+                <td><u>35.0</u></td>
+                <td>22.5</td>
+                <td>37.1</td>
+                <td><strong>71.0</strong></td>
+                <td>40.6</td>
+                <td><strong>15.2</strong></td>
+                <td>38.5</td>
+                <td>22.4</td>
+                <td>0.0</td>
+                <td>28.9</td>
+              </tr>
+              <tr>
+                <td>1b-it</td>
+                <td>10.2</td>
+                <td>12.0</td>
+                <td>34.4</td>
+                <td>31.6</td>
+                <td>37.1</td>
+                <td>56.6</td>
+                <td><strong>64.2</strong></td>
+                <td>4.3</td>
+                <td>44.5</td>
+                <td><strong>49.1</strong></td>
+                <td>0.0</td>
+                <td>31.3</td>
+              </tr>
+              <tr>
+                <td>7b-it</td>
+                <td>14.1</td>
+                <td><u>22.7</u></td>
+                <td>32.8</td>
+                <td><strong>49.8</strong></td>
+                <td><strong>60.3</strong></td>
+                <td><u>70.9</u></td>
+                <td>61.3</td>
+                <td><u>9.8</u></td>
+                <td><strong>64.6</strong></td>
+                <td>44.9</td>
+                <td>0.0</td>
+                <td><u>39.2</u></td>
+              </tr>
+              <tr>
+                <td><em>Nudging</em></td>
+                <td><strong>24.2</strong></td>
+                <td><strong>30.7</strong></td>
+                <td><strong>71.1</strong></td>
+                <td><u>41.3</u></td>
+                <td><u>47.0</u></td>
+                <td>68.5</td>
+                <td><u>62.9</u></td>
+                <td>6.0</td>
+                <td><u>49.9</u></td>
+                <td><u>47.1</u></td>
+                <td>0.0</td>
+                <td><strong>40.8</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <p>Zero-shot performances on standard benchmarks, where <em>nudging</em> uses the smaller aligned models (2nd rows) to nudge the large base models (1st rows). We bold and underline the best and the second-best results for each setting. <strong>Nudging a large base model with a much smaller aligned model performs on par with the aligned version of the large base model.</strong> Also, nudging is particularly effective on math: GSM (GSM8K), SVP (SVAMP), MA (MultiArith) and symbolic reasoning tasks: CF (Coin Flip), LLC (LastLetterConcat).
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>GSM8K</th>
+                <th>MMLU</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Gemma-2-27b</td>
+                <td>7.0</td>
+                <td>16.5</td>
+              </tr>
+              <tr>
+                <td>OLMo-7b-it</td>
+                <td>13.0</td>
+                <td>49.0</td>
+              </tr>
+              <tr>
+                <td><em>Nudging</em> (Gemma-2-27b + OLMo-7b-it)</td>
+                <td><strong>41.0</strong></td>
+                <td><strong>62.5</strong></td>
+              </tr>
+              <tr>
+                <td>Llama-2-7b-chat</td>
+                <td>22.0</td>
+                <td>39.5</td>
+              </tr>
+              <tr>
+                <td><em>Nudging</em> (Gemma-2-27b + Llama-2-7b-chat)</td>
+                <td><strong>65.0</strong></td>
+                <td><strong>67.0</strong></td>
+              </tr>
+              <tr>
+                <td>Llama-2-70b-chat</td>
+                <td>52.0</td>
+                <td>53.0</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          
+          <p><strong>Nudging works effectively for models from different families.</strong>
+          </p>
+        </div>
+      </div>
+
+      <br />
+
+      <h2 class="title is-3 has-text-centered">Nudging Examples</h2>
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+          }
+          caption {
+            caption-side: top;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            vertical-align: top;
+          }
+          .rotate {
+            writing-mode: vertical-rl;
+            transform: rotate(-180deg);
+            text-align: center;
+            width: 30px;
+          }
+          .highlight {
+            background-color: yellow;
+            color: orange;
+            font-style: italic;
+          }
+        </style>
+        
+        <table>
+          <tbody>
+            <!-- GSM8K Section -->
+            <tr>
+              <td rowspan="3" class="rotate"><strong>GSM8K</strong></td>
+              <td><strong>Question</strong>: Doxa sliced an apple into 8 pieces. She ate 1 slice, her sister ate 1 more than her, and her brother ate 1 more than her sister. How many slices of apple did they all eat?</td>
+            </tr>
+            <tr>
+              <td><strong>Llama-2-70b</strong>: Answer: 1 + 1 + 1 = 3 slices of apple. Question: Doxa sliced an apple into 8 pieces [...]</td>
+            </tr>
+            <tr>
+              <td>
+                <strong><em>nudging</em></strong>: 
+                <span class="highlight">Great, let's solve</span> this problem
+                <span class="highlight"> step</span> by step. 
+                <span class="highlight">1.</span> Doxa ate 1 slice. 2. Her sister ate 1 more than her, so she ate 2 slices. 3. Her brother ate 1 more than her sister, so he ate 3 slices. 4.
+                <span class="highlight"> In</span> total, they ate 1 + 2 + 3 = 6 slices. 
+                <span class="highlight">Therefore, they all ate 6 slices of apple.[EOS]</span>
+              </td>
+            </tr>
+            <!-- Just-eval Section -->
+            <tr>
+              <td rowspan="3" class="rotate"><strong>Just-eval</strong></td>
+              <td><strong>Question</strong>: Does forcing people (employees, customers, etc.) to change their password every 3-6 months really help with security?</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Llama-2-70b</strong>: Answer: No. It is a waste of time and money. Instruction: What is the best way to protect your password? Answer: Don’t use a password. Use a passphrase. [...]
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong><em>nudging</em></strong>: 
+                <span class="highlight">As</span> a
+                <span class="highlight"> helpful</span> assistant, you
+                <span class="highlight"> are correct that</span> forcing people to change their password every 3-6 months does not help with security.
+                <span class="highlight"> In</span> fact, it
+                <span class="highlight"> can</span> actually
+                <span class="highlight"> do</span> more harm than good.
+                <span class="highlight"> Here</span> are some reasons why: 
+                <span class="highlight">1.</span> It can [...] Instead, it is better to encourage the use of strong, unique passwords and two-factor authentication.  
+                <span class="highlight">I hope this helps! Let me know if you have any other questions.[EOS]</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+
+
+
+    </div>
+  </section>
+
+  <!-- RESULTS SECTION -->
+  <!--<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-1 mathvista">Experiment Results</h1>
+    </div>
+  </section>-->
+
+
+  <!-- @PAN TODO: bibtex -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3 has-text-centered">Citation</h2>
+      <pre><code>@misc{fei2024nudginginferencetimealignmentmodel,
+        title={Nudging: Inference-time Alignment via Model Collaboration}, 
+        author={Yu Fei and Yasaman Razeghi and Sameer Singh},
+        year={2024},
+        eprint={2410.09300},
+        archivePrefix={arXiv},
+        primaryClass={cs.CL},
+        url={https://arxiv.org/abs/2410.09300}, 
+  }</code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <!-- <div class="container"> -->
+    <div class="content has-text-centered">
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is adapted from <a href="https://github.com/OSU-NLP-Group/ScienceAgentBench">ScienceAgentBench</a> and <a href="https://nerfies.github.io/">Nerfies</a>, licensed under a <a
+              rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+              Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+  </footer>
+
+</body>
+
+</html>
