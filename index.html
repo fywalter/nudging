@@ -793,7 +793,7 @@
 
 window.addEventListener('DOMContentLoaded', (event) => {
   // Load the JSON data
-  fetch('https://fywalter.github.io/nudging/static/data.json')
+  fetch('./static/data.json')
     .then(response => response.json())
     .then(jsonData => {
       data = jsonData;
