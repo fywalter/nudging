@@ -281,10 +281,10 @@
 
       <br />
 
-      <h2 class="title is-3 has-text-centered">Two Key Insights</h2>
+      <h2 class="title is-3 has-text-centered">Two Key Insights into Alignment</h2>
       <p>
         Previous work finds that the token distributions of base models shift significantly after alignment only on a small set of output positions. 
-        By identifying (1) <strong>where the base and aligned model would disagree</strong> and (2) <strong>what the aligned model would generate for these positions</strong>, we can insert these tokens during decoding to nudge a base model to behave like an aligned model. 
+        By identifying (1) <strong>where the base and aligned model would disagree</strong> (alignment-related positions) and (2) <strong>what the aligned model would generate for these positions</strong> (alignment tokens), we can insert these tokens during decoding to nudge a base model to behave like an aligned model. 
         We study these two questions: <strong>where to nudge </strong>and <strong>what to nudge</strong>. Specifically, we find:
         <ol>
           <li><strong>Base models are significantly more uncertain at alignment-related positions.</strong></li>
@@ -292,14 +292,14 @@
         </ol>
       </p>
       <br />
-      <h3 class="title is-4 has-text-centered">Experimental Setup</h3>
+      <h3 class="title is-4 has-text-centered">Setup</h3>
       
       <div id="results-carousel" class="carousel results-carousel">
         <div class="box m-5">
           <div class="content has-text-centered">
             <div class="content has-text-centered">
               <img src="static/images/where_to_nudge.jpg" alt="data-overview" style="max-width: 100%;" />
-              <p >To answer <strong>where to nudge</strong>, we compare the token distribution of the base model and the aligned model. We aim to show that the base model uncertainty can help identify positions where the token distribution of the base model significantly differs from the aligned model.</p>
+              <p >To answer <strong>where to nudge</strong>, we compare the token distribution of the base model and the aligned model. We aim to show that the base model uncertainty can help identify positions where the token distribution of the base model significantly differs from the aligned model (the red box).</p>
           </div>
           </div>
         </div>
@@ -318,7 +318,7 @@
           <div class="content has-text-centered">
             <div class="content has-text-centered">
               <img src="static/images/agreement.png" alt="data-overview" style="max-width: 100%;" />
-              <p ><strong>Base models are mostly certain and agree with their aligned counterparts at the token level. When the base models get more uncertain, they are more likely to disagree with the aligned models.</strong></p>
+              <p >The counts and ratios of different token position types for three model pairs on three tasks. Agree, weakly disagree, and disagree refer to positions where the top-1 token from the aligned model has a rank equal to 1, between 2 and 3, and larger than 3, in the base model's token distribution. <strong>Base models are mostly certain and agree with their aligned counterparts at the token level. When the base models get more uncertain, they are more likely to disagree with the aligned models.</strong></p>
           </div>
           </div>
         </div>
@@ -641,14 +641,14 @@
           </table>
           
           
-          <p><strong>Nudging works effectively for models from different families.</strong>
+          <p>Zero-shot performance of different models. <strong>Nudging works effectively for models from different families.</strong>
           </p>
         </div>
       </div>
 
       <br />
 
-      <h2 class="title is-3 has-text-centered">Nudging Examples</h2>
+      <div class="container is-full has-text-centered content m-6" id="result-table">
         <style>
           table {
             width: 100%;
@@ -666,6 +666,7 @@
             border: 1px solid #ddd;
             padding: 10px;
             vertical-align: top;
+            text-align: left;
           }
           .rotate {
             writing-mode: vertical-rl;
@@ -679,55 +680,65 @@
             font-style: italic;
           }
         </style>
-        
-        <table>
-          <tbody>
-            <!-- GSM8K Section -->
-            <tr>
-              <td rowspan="3" class="rotate"><strong>GSM8K</strong></td>
-              <td><strong>Question</strong>: Doxa sliced an apple into 8 pieces. She ate 1 slice, her sister ate 1 more than her, and her brother ate 1 more than her sister. How many slices of apple did they all eat?</td>
-            </tr>
-            <tr>
-              <td><strong>Llama-2-70b</strong>: Answer: 1 + 1 + 1 = 3 slices of apple. Question: Doxa sliced an apple into 8 pieces [...]</td>
-            </tr>
-            <tr>
-              <td>
-                <strong><em>nudging</em></strong>: 
-                <span class="highlight">Great, let's solve</span> this problem
-                <span class="highlight"> step</span> by step. 
-                <span class="highlight">1.</span> Doxa ate 1 slice. 2. Her sister ate 1 more than her, so she ate 2 slices. 3. Her brother ate 1 more than her sister, so he ate 3 slices. 4.
-                <span class="highlight"> In</span> total, they ate 1 + 2 + 3 = 6 slices. 
-                <span class="highlight">Therefore, they all ate 6 slices of apple.[EOS]</span>
-              </td>
-            </tr>
-            <!-- Just-eval Section -->
-            <tr>
-              <td rowspan="3" class="rotate"><strong>Just-eval</strong></td>
-              <td><strong>Question</strong>: Does forcing people (employees, customers, etc.) to change their password every 3-6 months really help with security?</td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Llama-2-70b</strong>: Answer: No. It is a waste of time and money. Instruction: What is the best way to protect your password? Answer: Don’t use a password. Use a passphrase. [...]
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong><em>nudging</em></strong>: 
-                <span class="highlight">As</span> a
-                <span class="highlight"> helpful</span> assistant, you
-                <span class="highlight"> are correct that</span> forcing people to change their password every 3-6 months does not help with security.
-                <span class="highlight"> In</span> fact, it
-                <span class="highlight"> can</span> actually
-                <span class="highlight"> do</span> more harm than good.
-                <span class="highlight"> Here</span> are some reasons why: 
-                <span class="highlight">1.</span> It can [...] Instead, it is better to encourage the use of strong, unique passwords and two-factor authentication.  
-                <span class="highlight">I hope this helps! Let me know if you have any other questions.[EOS]</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        
+        <h2 class="title is-3" id="explorer">Explorer</h2>
+        <p>
+          Explore the base models' output and the nudging output on different tasks and model families.
+        </p>
+        <div class="level has-text-centered" style="position: sticky; top: 0; z-index: 20;">
+          <!-- Refresh Button -->
+          <div class="level-item box m-3" style="width: 30%; background: rgba(250, 250, 250, 1);">
+            <button class="button" style="width: 100%; border: none; background: rgba(250, 250, 250, 1);" id="refresh-button">
+              <span class="icon is-large">
+                <i class="fa fa-redo fa-lg" aria-hidden="true"></i>
+              </span>
+              <p class="title is-4 m-0">Show one sample</p>
+            </button>
+          </div>
+          <!-- First Dropdown Menu (Dataset Name) -->
+          <div class="level-item box m-3" style="width: 30%; background: rgba(250, 250, 250, 1);">
+            <div class="dropdown" id="dataset-dropdown" style="width: 100%;">
+              <div class="dropdown-trigger has-text-justified" style="width: 100%;">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu-dataset" style="width: 100%; border: none; background: rgba(250, 250, 250, 1);">
+                  <p class="title m-0 is-4 dropdown-display" id="dataset-dropdown-display">Select Dataset</p>
+                  <span class="icon is-large" style="position: absolute; right:0;">
+                    <i class="fas fa-angle-down fa-lg" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu-dataset" role="menu" style="width:100%;">
+                <div class="dropdown-content" id="dataset-dropdown-content">
+                  <!-- Options will be populated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Second Dropdown Menu (Model Family) -->
+          <div class="level-item box m-3" style="width: 30%; background: rgba(250, 250, 250, 1);">
+            <div class="dropdown" id="model-dropdown" style="width: 100%;">
+              <div class="dropdown-trigger has-text-justified" style="width: 100%;">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu-model" style="width: 100%; border: none; background: rgba(250, 250, 250, 1);">
+                  <p class="title m-0 is-4 dropdown-display" id="model-dropdown-display">Select Base Model</p>
+                  <span class="icon is-large" style="position: absolute; right:0;">
+                    <i class="fas fa-angle-down fa-lg" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu-model" role="menu" style="width:100%;">
+                <div class="dropdown-content" id="model-dropdown-content">
+                  <!-- Options will be populated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
 
+        </div>
+      </div>
+        <!-- Placeholder for the result table -->
+        <div id="result-container">
+          <!-- The table will be injected here -->
+        </div>
+      
+      
 
 
     </div>
@@ -766,7 +777,8 @@
       <div class="column is-8">
         <div class="content">
           <p>
-            This website is adapted from <a href="https://github.com/OSU-NLP-Group/ScienceAgentBench">ScienceAgentBench</a> and <a href="https://nerfies.github.io/">Nerfies</a>, licensed under a <a
+            This website is adapted from <a href="https://github.com/OSU-NLP-Group/ScienceAgentBench">ScienceAgentBench</a>,  <a href="https://mathvista.github.io/">MathVista</a>,
+            and <a href="https://nerfies.github.io/">Nerfies</a>, licensed under a <a
               rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
               Commons Attribution-ShareAlike 4.0 International License</a>.
           </p>
@@ -776,6 +788,160 @@
     <!-- </div> -->
   </footer>
 
+  <script>
+    let data = {};
+
+window.addEventListener('DOMContentLoaded', (event) => {
+  // Load the JSON data
+  fetch('/static/data.json')
+    .then(response => response.json())
+    .then(jsonData => {
+      data = jsonData;
+      // Populate the dropdowns after data is loaded
+      populateDropdowns();
+    })
+    .catch(error => console.error('Error loading JSON data:', error));
+
+  // Event listeners for dropdown triggers
+  document.querySelectorAll('.dropdown .dropdown-trigger').forEach(trigger => {
+    const dropdown = trigger.parentElement;
+    trigger.addEventListener('click', function(event) {
+      event.stopPropagation();
+      dropdown.classList.toggle('is-active');
+    });
+  });
+
+  // Close all dropdowns when clicking outside
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+      dropdown.classList.remove('is-active');
+    });
+  });
+});
+
+function populateDropdowns() {
+  // Get dataset names from data keys
+  const datasetNames = Object.keys(data);
+  populateDropdown('dataset-dropdown-content', datasetNames, 'dataset-dropdown-display', 'dataset-dropdown');
+
+  // For models, get a unique list from all datasets
+  const modelSet = new Set();
+  datasetNames.forEach(dataset => {
+    Object.keys(data[dataset]).forEach(model => modelSet.add(model));
+  });
+  const modelNames = Array.from(modelSet);
+  populateDropdown('model-dropdown-content', modelNames, 'model-dropdown-display', 'model-dropdown');
+}
+
+function populateDropdown(dropdownContentId, options, displayId, dropdownElementId) {
+  const dropdownContent = document.getElementById(dropdownContentId);
+  dropdownContent.innerHTML = ''; // Clear previous options
+
+  options.forEach(option => {
+    const a = document.createElement('a');
+    a.classList.add('dropdown-item');
+    a.href = '#'; // Makes the link focusable
+    a.textContent = option;
+
+    a.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent default action
+      event.stopPropagation(); // Stop the click from bubbling up
+      // Update the display text
+      document.getElementById(displayId).textContent = option;
+      // Close the dropdown menu
+      const dropdown = document.getElementById(dropdownElementId);
+      if (dropdown) {
+        dropdown.classList.remove('is-active');
+      }
+    });
+
+    dropdownContent.appendChild(a);
+  });
+}
+
+document.getElementById('refresh-button').addEventListener('click', function() {
+  // Get selected options
+  const selectedDataset = document.getElementById('dataset-dropdown-display').textContent;
+  const selectedModel = document.getElementById('model-dropdown-display').textContent;
+
+  // Check if selections are valid
+  if (selectedDataset === 'Select Dataset' || selectedModel === 'Select Model') {
+    alert('Please select both a dataset and a model.');
+    return;
+  }
+
+  // Retrieve data based on selections
+  const tableData = getData(selectedDataset, selectedModel);
+
+  // Render the table
+  renderTable(tableData);
+});
+
+function getData(datasetName, modelName) {
+  // Check if dataset and model exist in data
+  if (data[datasetName] && data[datasetName][modelName]) {
+    const samples = data[datasetName][modelName];
+    if (samples.length === 0) {
+      return null;
+    }
+    // Randomly select one sample from the list
+    const randomIndex = Math.floor(Math.random() * samples.length);
+    const sample = samples[randomIndex];
+    return {
+      section: datasetName,
+      question: sample.question,
+      modelAnswer: sample.modelAnswer,
+      nudging: sample.nudging
+    };
+  } else {
+    return null;
+  }
+}
+
+function renderTable(entry) {
+  const resultContainer = document.getElementById('result-container');
+  // Clear previous results
+  resultContainer.innerHTML = '';
+
+  if (!entry) {
+    resultContainer.innerHTML = '<p>No data available for the selected dataset and model.</p>';
+    return;
+  }
+
+  // Optionally, add the section title as a heading
+  // const sectionTitle = document.createElement('h3');
+  // sectionTitle.textContent = entry.section;
+  // resultContainer.appendChild(sectionTitle);
+
+  // Create table element
+  const table = document.createElement('table');
+  const tbody = document.createElement('tbody');
+
+  // Question Row
+  const questionRow = document.createElement('tr');
+  const questionCell = document.createElement('td');
+  questionCell.innerHTML = entry.question;
+  questionRow.appendChild(questionCell);
+  tbody.appendChild(questionRow);
+
+  // Model Answer Row
+  const modelRow = document.createElement('tr');
+  const modelCell = document.createElement('td');
+  modelCell.innerHTML = entry.modelAnswer;
+  modelRow.appendChild(modelCell);
+  tbody.appendChild(modelRow);
+
+  // Nudging Row
+  const nudgingRow = document.createElement('tr');
+  const nudgingCell = document.createElement('td');
+  nudgingCell.innerHTML = entry.nudging;
+  nudgingRow.appendChild(nudgingCell);
+  tbody.appendChild(nudgingRow);
+
+  table.appendChild(tbody);
+  resultContainer.appendChild(table);
+}
+</script>
 </body>
 
 </html>
