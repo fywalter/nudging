@@ -1,7 +1,8 @@
 # Nudging: Inference-time Alignment via Model Collaboration
 
 This is the code for Nudging: Inference-time Alignment via Model Collaboration.
- * [Project Page](https://fywalter.github.io/nudging/) 
+ * [Project Page](https://fywalter.github.io/nudging/)
+ * [Demo](https://huggingface.co/spaces/fywalter/nudging_align)
  * [Paper](https://arxiv.org/abs/2410.09300)
 
 Currently we provide an API-based implementation of nudging that uses [vllm](https://github.com/vllm-project/vllm) to host the models and provide API access.
