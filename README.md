@@ -131,10 +131,10 @@ python run_api.py --dataset_name gsm8k \
 ## Citing
 If you find our work useful, please consider citing:
 ```BibTeX
-@misc{fei2024nudginginferencetimealignmentmodel,
-      title={Nudging: Inference-time Alignment via Model Collaboration}, 
+@misc{fei2025nudginginferencetimealignmentllms,
+      title={Nudging: Inference-time Alignment of LLMs via Guided Decoding}, 
       author={Yu Fei and Yasaman Razeghi and Sameer Singh},
-      year={2024},
+      year={2025},
       eprint={2410.09300},
       archivePrefix={arXiv},
       primaryClass={cs.CL},
