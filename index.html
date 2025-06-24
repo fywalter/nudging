@@ -734,12 +734,115 @@
         </div>
       </div>
         <!-- Placeholder for the result table -->
-        <div id="result-container">
+      <div id="result-container">
           <!-- The table will be injected here -->
+      </div>
+      <div class="container is-full has-text-centered content m-6" id="result-table">
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+          }
+          caption {
+            caption-side: top;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            vertical-align: top;
+            text-align: left;
+          }
+          .rotate {
+            writing-mode: vertical-rl;
+            transform: rotate(-180deg);
+            text-align: center;
+            width: 30px;
+          }
+          .highlight {
+            background-color: yellow;
+            color: orange;
+            font-style: italic;
+          }
+        </style>
+        <h2 class="title is-3" id="explorer">One Future Direction: Nudging for Advanced Reasoning</h2>
+        <div style="text-align: left;">
+          <p>
+            Several recent works have shown the importance of "reasoning tokens" like "Hmm" or "Wait" for advanced reasoning models like DeepSeek-R1. Nudging shares a very similar insight and one promising future direction is to use nudging to trigger advanced reasoning abilities like self-reflection or exploring multiple potential directions. While we believe this requires training a nudging model to tell where to nudge going beyond simply relying on the base model's uncertainty. Here we show an example of how <strong> directly applying uncertainty-based nudging can already trigger advanced reasoning abilities</strong>.
+          </p>
         </div>
-      
-      
+      </div>
+      <div id="advanced-reasoning-container">
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Question:</strong>
+                A company's HR hires 20 new employees every month to add to its total workforce. If the company's initial employee number is 200, and each employee is paid a $4000 salary per month, calculate the total amount of money the company pays to its employees after three months? Please reason step by step, and put your final answer within \boxed{}.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Qwen-2.5-Math-7B:</strong> To solve this problem, we need to calculate the total number of employees after three months and then compute the total amount of money the company pays to its employees.
 
+                1. **Initial number of employees**: 200
+                2. **Number of new employees hired each month**: 20
+                3. **Salary per employee per month**: $4000
+                4. **Number of months**: 3
+                
+                Let's break down the steps:
+                
+                1. Calculate the total number of employees after three months.
+                2. Calculate the total amount of money paid to employees each month.
+                3. Sum up the total amount paid over the three months.
+                
+                We'll use Python to ensure the calculations are accurate.
+                ```python
+                # Initial number of employees
+                initial_employees = 200
+                
+                # Number of new employees hired each month
+                new_employees_per_month = 20
+                
+                # Salary per employee per month
+                salary_per_employee = 4000
+                
+                # Number of months
+                months = 3
+                
+                # Calculate the total number of employees after three months
+                total_employees_after_three_months = initial_employees + (new_employees_per_month * months)
+                
+                # Calculate the total amount of money paid to employees each month
+                total_salary_per_month = total_employees_after_three_months * salary_per_employee
+                
+                # Calculate the total amount of money paid over the three months
+                total_salary_over_three_months = total_salary_per_month * months
+                
+                print(total_salary_over_three_months)
+                ```
+                ```output
+                3120000
+                ```
+                The total amount of money the company pays to its employees after three months is \(\boxed{3120000}\).
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Nudging with DeepSeek-R1-Distill-Qwen-7B:</strong> <span class="highlight">Okay, so I need</span> to<span class="highlight"> figure</span> out<span class="highlight"> how</span> many employees the company will have after three months<span class="highlight"> and</span> then calculate the total<span class="highlight"> salary paid</span> to all employees<span class="highlight">. Let</span>'s<span class="highlight"> break</span> it down<span class="highlight"> step</span> by step<span class="highlight">. First, the</span> company starts with 200 employees. Every month, 20 new employees are hired. So, after<span class="highlight"> one</span> month, the company will have 200 + 20 = 220 employees. After two months, the company will have 220 + 20 = 240 employees. And after three months, the company will have 240 + 20 = 260 employees. <span class="highlight">Wait, hold</span> on<span class="highlight">. Is</span> that<span class="highlight"> correct? So,</span> after three months, the company will have 260 employees<span class="highlight">.</span> But<span class="highlight"> I need</span> to calculate the total salary paid to all employees<span class="highlight"> after</span> three months. Each employee is paid a  $4000 salary per month. So, the total salary paid to all employees after three months will be 260 employees *  $4000<span class="highlight"> per</span> employee =  $1,040,000. <span class="highlight">But wait, is</span> that the<span class="highlight"> correct</span> answer?<span class="highlight"> Let</span>'s double-check<span class="highlight">. Alternatively, maybe</span> I should calculate the total salary paid to all employees<span class="highlight"> each</span> month and then add them up.<span class="highlight"> So, in</span> the first month, the company will pay 200 employees *  $4000 per employee =  $800,000. In the second month, the company will pay 220 employees *  $4000 per employee =  $880,000. And in the third month, the company will pay 240 employees *  $4000 per employee =  $960,000. Adding these up, the total salary paid to all employees after three months will be  $800,000 +  $880,000 +  $960,000 =  $2,640,000. <span class="highlight">Wait, now</span> I'm confused. Which one is the correct answer? Let's<span class="highlight"> see. If</span> I calculate the total salary paid to all employees after three months by adding up the total salary paid to all employees each month, I get  $2,640,000. But if I calculate the total salary paid to all employees after three months by multiplying the number of employees after three months by the salary per employee, I get  $1,040,000. Which one is the correct answer<span class="highlight">? Hmm,</span> I think I<span class="highlight"> need</span> to<span class="highlight"> clarify</span> the question. The question asks for the total amount of money the company pays to its employees after three months. So, I need to calculate the total salary paid to all employees after three months.<span class="highlight"> That</span> means I need to calculate the total salary paid to all employees each month and then add them up. So, the total salary paid to all employees after three months will be  $800,000 +  $880,000 +  $960,000 =  $2,640,000...
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="text-align: center;">
+          For the nudging answer, the <span class="highlight">colored tokens</span> are generated by the nudging model, and the black texts are from the base model.
+        </p>
+      </div>
 
     </div>
   </section>
