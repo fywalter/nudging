@@ -4,6 +4,7 @@ This is the code for Nudging: Inference-time Alignment of LLMs via Guided Decodi
  * [Project Page](https://fywalter.github.io/nudging/)
  * [Demo](https://huggingface.co/spaces/fywalter/nudging_align)
  * [Paper](https://arxiv.org/abs/2410.09300)
+ * [Video](https://www.youtube.com/watch?v=-HS1J_uCWUY)
 
 Currently we provide an API-based implementation of nudging that uses [vllm](https://github.com/vllm-project/vllm) to host the models and provide API access.
 With slight modifications the code could also work with any API service providers that provide openai-compatible interfaces like [Together AI](https://www.together.ai/) and [Fireworks AI](https://fireworks.ai/).
