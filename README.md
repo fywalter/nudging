@@ -9,6 +9,7 @@ This is the code for Nudging: Inference-time Alignment of LLMs via Guided Decodi
 Currently we provide an API-based implementation of nudging that uses [vllm](https://github.com/vllm-project/vllm) to host the models and provide API access.
 With slight modifications the code could also work with any API service providers that provide openai-compatible interfaces like [Together AI](https://www.together.ai/) and [Fireworks AI](https://fireworks.ai/).
 We are working on a [speculative docoding](https://arxiv.org/abs/2211.17192) style fast local implementation of nudging that will be released soon.
+ * **[News!] A fast prefix-caching implementation can be find in the [Moco](https://github.com/BunsenFeng/model_collaboration/blob/dev/model_collaboration/method/api_nudging.py) library, where the library supports auto threshold and model selection based on a dev set. Check out the [cool paper](https://arxiv.org/abs/2601.21257) as well!**
  
 ## Setup
 The code can be run under any environment with Python 3.11 and above.
